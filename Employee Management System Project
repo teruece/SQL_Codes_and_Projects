@@ -1,0 +1,32 @@
+-- Create Employee Table
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    Department VARCHAR(50),
+    Salary DECIMAL(10, 2),
+    HireDate DATE
+);
+
+-- Insert Data
+INSERT INTO Employees (EmployeeID, FirstName, LastName, Department, Salary, HireDate)
+VALUES 
+(1, 'Alice', 'Smith', 'HR', 55000, '2021-03-01'),
+(2, 'Bob', 'Johnson', 'IT', 75000, '2020-08-15'),
+(3, 'Charlie', 'Brown', 'Finance', 65000, '2019-11-20');
+
+-- Query: Get All Employees in the IT Department
+SELECT * FROM Employees WHERE Department = 'IT';
+
+-- Query: Get Average Salary by Department
+SELECT Department, AVG(Salary) AS AvgSalary
+FROM Employees
+GROUP BY Department;
+
+-- Query: Update Salary of an Employee
+UPDATE Employees
+SET Salary = Salary * 1.1
+WHERE EmployeeID = 2;
+
+-- Query: Delete an Employee Record
+DELETE FROM Employees WHERE EmployeeID = 3;
