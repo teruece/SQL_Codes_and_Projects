@@ -1,0 +1,9 @@
+-- Create a stored procedure to get user orders by UserID
+DELIMITER $$
+CREATE PROCEDURE GetUserOrders (IN UserID INT)
+BEGIN
+    SELECT * 
+    FROM Orders 
+    WHERE Orders.UserID = UserID;
+END $$
+DELIMITER ;
