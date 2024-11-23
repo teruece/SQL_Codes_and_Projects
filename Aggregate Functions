@@ -1,0 +1,5 @@
+-- Get the total order amount for each user
+SELECT Users.UserName, SUM(Orders.Amount) AS TotalAmount
+FROM Users
+JOIN Orders ON Users.UserID = Orders.UserID
+GROUP BY Users.UserName;
