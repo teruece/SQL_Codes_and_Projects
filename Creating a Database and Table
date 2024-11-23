@@ -1,0 +1,13 @@
+-- Create a new database
+CREATE DATABASE MyDatabase;
+
+-- Switch to the database
+USE MyDatabase;
+
+-- Create a table for storing user information
+CREATE TABLE Users (
+    UserID INT AUTO_INCREMENT PRIMARY KEY,
+    UserName VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    DateJoined DATE DEFAULT CURRENT_DATE
+);
