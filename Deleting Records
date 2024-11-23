@@ -1,0 +1,2 @@
+-- Delete a specific user
+DELETE FROM Users WHERE UserName = 'Charlie';
