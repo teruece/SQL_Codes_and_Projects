@@ -1,0 +1,19 @@
+-- Create another table for orders
+CREATE TABLE Orders (
+    OrderID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT,
+    OrderDate DATE DEFAULT CURRENT_DATE,
+    Amount DECIMAL(10, 2),
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+-- Insert sample data into Orders
+INSERT INTO Orders (UserID, Amount) 
+VALUES 
+    (1, 150.00),
+    (2, 200.50);
+
+-- Join Users and Orders tables to get user order details
+SELECT Users.UserName, Orders.OrderDate, Orders.Amount
+FROM Users
+JOIN Orders ON Users.UserID = Orders.UserID;
