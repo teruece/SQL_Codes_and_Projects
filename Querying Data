@@ -1,0 +1,8 @@
+-- Retrieve all user records
+SELECT * FROM Users;
+
+-- Retrieve specific columns
+SELECT UserName, Email FROM Users;
+
+-- Filter records based on conditions
+SELECT * FROM Users WHERE UserName = 'Alice';
