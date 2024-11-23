@@ -1,0 +1,27 @@
+-- Create Feedback Table
+CREATE TABLE Feedback (
+    FeedbackID INT PRIMARY KEY,
+    CustomerName VARCHAR(100),
+    FeedbackText TEXT,
+    Rating INT,
+    FeedbackDate DATE
+);
+
+-- Insert Data
+INSERT INTO Feedback (FeedbackID, CustomerName, FeedbackText, Rating, FeedbackDate)
+VALUES 
+(1, 'Alice', 'Great service!', 5, '2023-10-20'),
+(2, 'Bob', 'Average experience.', 3, '2023-10-21'),
+(3, 'Charlie', 'Poor quality product.', 1, '2023-10-22');
+
+-- Query: Get Average Rating
+SELECT AVG(Rating) AS AvgRating FROM Feedback;
+
+-- Query: Count Feedback by Rating
+SELECT Rating, COUNT(*) AS FeedbackCount
+FROM Feedback
+GROUP BY Rating;
+
+-- Query: Search Feedback Containing Keywords
+SELECT * FROM Feedback
+WHERE FeedbackText LIKE '%service%' OR FeedbackText LIKE '%quality%';
