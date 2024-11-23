@@ -1,0 +1,4 @@
+-- Update a user's email
+UPDATE Users 
+SET Email = 'newalice@example.com' 
+WHERE UserName = 'Alice';
