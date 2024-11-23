@@ -1,0 +1,47 @@
+-- Create Products Table
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY,
+    ProductName VARCHAR(100),
+    Category VARCHAR(50),
+    Price DECIMAL(10, 2),
+    Stock INT
+);
+
+-- Create Orders Table
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    CustomerName VARCHAR(100),
+    ProductID INT,
+    Quantity INT,
+    OrderDate DATE,
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+-- Insert Data into Products Table
+INSERT INTO Products (ProductID, ProductName, Category, Price, Stock)
+VALUES 
+(1, 'Laptop', 'Electronics', 800.00, 50),
+(2, 'Headphones', 'Electronics', 50.00, 200),
+(3, 'Coffee Mug', 'Kitchen', 12.00, 150);
+
+-- Insert Data into Orders Table
+INSERT INTO Orders (OrderID, CustomerName, ProductID, Quantity, OrderDate)
+VALUES 
+(1, 'John Doe', 1, 1, '2023-10-01'),
+(2, 'Jane Smith', 3, 4, '2023-10-02');
+
+-- Query: Get Total Sales by Product
+SELECT 
+    p.ProductName, 
+    SUM(o.Quantity * p.Price) AS TotalSales
+FROM Orders o
+JOIN Products p ON o.ProductID = p.ProductID
+GROUP BY p.ProductName;
+
+-- Query: Update Stock After an Order
+UPDATE Products
+SET Stock = Stock - (SELECT Quantity FROM Orders WHERE OrderID = 1)
+WHERE ProductID = (SELECT ProductID FROM Orders WHERE OrderID = 1);
+
+-- Query: Find Products with Low Stock
+SELECT * FROM Products WHERE Stock < 20;
