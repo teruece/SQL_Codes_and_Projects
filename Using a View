@@ -1,0 +1,8 @@
+-- Create a view for active users
+CREATE VIEW ActiveUsers AS
+SELECT UserID, UserName, Email 
+FROM Users 
+WHERE DateJoined > '2023-01-01';
+
+-- Query the view
+SELECT * FROM ActiveUsers;
