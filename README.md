@@ -1,0 +1,1 @@
+This repository contains a collection of SQL scripts, queries, and mini-projects developed and authored by Teruyuki Ito. It showcases practical applications of SQL for data extraction, transformation, analysis, and reporting across various business domains, with a focus on clean, efficient, and scalable query design.
