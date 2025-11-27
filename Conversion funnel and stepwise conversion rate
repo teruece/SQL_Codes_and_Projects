@@ -1,0 +1,43 @@
+WITH funnel_events AS (
+  SELECT 'u1' user_id, 'view' step, TIMESTAMP('2025-01-01 09:00:00') ts UNION ALL
+  SELECT 'u1', 'add_to_cart', TIMESTAMP('2025-01-01 09:05:00') UNION ALL
+  SELECT 'u1', 'checkout', TIMESTAMP('2025-01-01 09:07:00') UNION ALL
+  SELECT 'u1', 'purchase', TIMESTAMP('2025-01-01 09:08:00') UNION ALL
+  SELECT 'u2', 'view', TIMESTAMP('2025-01-01 10:00:00') UNION ALL
+  SELECT 'u2', 'add_to_cart', TIMESTAMP('2025-01-02 10:00:00') UNION ALL
+  SELECT 'u3', 'checkout', TIMESTAMP('2025-01-03 11:00:00') UNION ALL -- skipped earlier steps
+  SELECT 'u4', 'view', TIMESTAMP('2025-01-04 12:00:00') UNION ALL
+  SELECT 'u4', 'add_to_cart', TIMESTAMP('2025-01-04 12:10:00')
+),
+
+first_steps AS (
+  -- pick first occurrence of each step per user
+  SELECT user_id, step, MIN(ts) AS first_ts
+  FROM funnel_events
+  GROUP BY user_id, step
+),
+
+step_users AS (
+  SELECT step, COUNT(DISTINCT user_id) AS users_reached
+  FROM first_steps
+  GROUP BY step
+),
+
+-- pivot the counts to rows ordered by funnel step
+ordered_steps AS (
+  SELECT step, users_reached,
+    ROW_NUMBER() OVER (ORDER BY CASE step
+      WHEN 'view' THEN 1 WHEN 'add_to_cart' THEN 2 WHEN 'checkout' THEN 3 WHEN 'purchase' THEN 4 END) AS ord
+  FROM step_users
+)
+
+SELECT
+  s.step,
+  s.users_reached,
+  LAG(s.users_reached) OVER (ORDER BY s.ord) AS prev_step_users,
+  CASE
+    WHEN LAG(s.users_reached) OVER (ORDER BY s.ord) IS NULL THEN NULL
+    ELSE ROUND(s.users_reached * 100.0 / LAG(s.users_reached) OVER (ORDER BY s.ord), 2)
+  END AS step_to_step_conversion_pct
+FROM ordered_steps s
+ORDER BY s.ord;
