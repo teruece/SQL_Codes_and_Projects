@@ -1,0 +1,28 @@
+WITH events AS (
+  SELECT 'u1' as user_id, TIMESTAMP('2025-01-01 09:00:00') as ts, 'page_view' as event UNION ALL
+  SELECT 'u1', TIMESTAMP('2025-01-01 09:05:00'), 'click' UNION ALL
+  SELECT 'u1', TIMESTAMP('2025-01-02 10:00:00'), 'purchase' UNION ALL
+  SELECT 'u2', TIMESTAMP('2025-01-01 11:00:00'), 'page_view' UNION ALL
+  SELECT 'u2', TIMESTAMP('2025-01-03 12:00:00'), 'click' UNION ALL
+  SELECT 'u3', TIMESTAMP('2025-01-04 08:00:00'), 'page_view'
+),
+
+ranked AS (
+  SELECT
+    user_id,
+    ts,
+    event,
+    ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY ts DESC) AS rn,
+    -- rolling count of last 3 events
+    COUNT(*) OVER (PARTITION BY user_id ORDER BY ts ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS rolling_3_count
+  FROM events
+)
+
+SELECT
+  user_id,
+  ts AS latest_ts,
+  event AS latest_event,
+  rolling_3_count
+FROM ranked
+WHERE rn = 1
+ORDER BY user_id;
