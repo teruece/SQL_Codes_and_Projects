@@ -1,0 +1,20 @@
+WITH transactions AS (
+  SELECT 't1' txn_id, 'u1' user_id, 10.0 amount, DATE '2025-11-20' created_date UNION ALL
+  SELECT 't2', NULL, 5.0, DATE '2025-11-24' UNION ALL
+  SELECT 't3', 'u2', 7.5, DATE '2025-11-25' UNION ALL
+  SELECT 't2', NULL, 5.0, DATE '2025-11-24'  -- duplicate txn_id
+),
+
+qc AS (
+  SELECT
+    COUNT(1) AS total_rows,
+    COUNTIF(user_id IS NULL) AS null_user_id_count,
+    SUM(CASE WHEN cnt > 1 THEN cnt ELSE 0 END) AS duplicate_txn_row_count, -- counts duplicated rows
+    (DATE_DIFF(CURRENT_DATE(), MAX(created_date), DAY)) AS days_since_newest_record
+  FROM (
+    SELECT t.*, COUNT(*) OVER (PARTITION BY txn_id) AS cnt
+    FROM transactions t
+  )
+)
+
+SELECT * FROM qc;
